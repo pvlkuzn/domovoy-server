@@ -4,24 +4,30 @@ const ApiError = require('../error/ApiError')
 class TariffController {
   
   async createNew(req, res, next){
-  
-   const {tariff} = req.body
-   console.log(req.body)
-   console.log (`tariff : ${tariff}`)
-   const newTariff = await Tariff.create({tariff})
-   return res.json(newTariff)
+    const {name} = req.body
+    const newTariff = await Tariff.create({name})
+    return res.json(newTariff)
   }
-  async del(req, res, next){
 
+  async del(req, res, next){
+    const {id} = req.body
+    Tariff.destroy({
+        where: {id}
+      }).then((rowDeleted)=>{ // rowDeleted will return number of rows deleted
+       if(rowDeleted === 1){
+        console.log('Deleted successfully')
+       }
+     }, (err)=>{ console.log(err)})
   }
-  async getAll(req,res){
+
+  async getAll(req, res, next){
     const tariffs = await Tariff.findAll()
     return res.json(tariffs)
   }
-  async getOne(req,res){
+  async getOne(req, res, next){
     const {id} = req.params
-    const tariffOne = await Tariff.findOne({where : {id}}) 
-    return res.json(tariffOne)
+    const tariffFounded = await Tariff.findOne({where : {id}}) 
+    return res.json(tariffFounded)
   }
  
 }

@@ -7,6 +7,6 @@ router.post('/createNew',apartmentController.createNew) // создания но
 router.post('/update',apartmentController.update)    // изменить квартиру
 //router.post('/del',)       // удалить квартиру(?)
 router.get('/',apartmentController.getAll)           // получить все квартиры
-router.get('/:id',apartmentController.getOne)        // получить квартиру по номеру
+router.get('/:number',apartmentController.getOne)        // получить квартиру по номеру
 
 module.exports = router

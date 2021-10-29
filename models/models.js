@@ -30,14 +30,14 @@ const Counter = sequelize.define('counter',{                   // счётчик
     serialNumber: {type :DataTypes.STRING, unique :true},
 })
 
-const CounterValue = sequelize.define('countervalue',{      // передаваемые показания за месяц
+const CounterValue = sequelize.define('counterValue',{      // передаваемые показания за месяц
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
     //counterId : {},
     value : {type : DataTypes.INTEGER,}
 })
-const Apartment = sequelize.define('apartament',{            // квартира
+const Apartment = sequelize.define('apartment',{            // квартира
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
-    number :{ type :DataTypes.INTEGER, allowNull: false },  // номер квартиры
+    number :{ type :DataTypes.STRING, allowNull: false, unique :true },  // номер квартиры
     //user :{ type:DataTypes.}, // ссылка на пользователя
     info: {type: DataTypes.STRING, },
 })
