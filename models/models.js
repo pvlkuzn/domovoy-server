@@ -2,7 +2,7 @@ const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
 
 
-const User = sequelize.define('User', {        // пользователь
+const User = sequelize.define('user', {        // пользователь
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
   email: {type: DataTypes.STRING, unique: true, allowNull: false },       // уникальный логин
   password: {type: DataTypes.STRING, allowNull: false},              // шифровние
@@ -47,10 +47,10 @@ const Apartment = sequelize.define('apartment',{            // квартира
 })
 
 // счетчик
-Resource.hasOne(Counter)   // один ресурс
+Resource.hasMany(Counter)   // один ресурс
 // Resource.belongsTo(Counter)
 
-Tariff.hasOne(Counter)     // один тариф
+Tariff.hasMany(Counter)     // один тариф
 // Tariff.belongsTo(Counter)
 
 Apartment.hasMany(Counter)  // одна квартира, ApartmentId -> Counter
@@ -64,7 +64,6 @@ Apartment.hasOne(User)  // один польователь - одна кварт
 // User.belongsTo(Apartment)
 
 module.exports = {
-   
   User,
   Resource,
   Tariff,

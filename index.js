@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const sequelize = require('./db')
 const models = require('./models/models')
+const testLoading = require('./models/createTestDB')
 
 const cors = require('cors')
 const { request } = require('express')
@@ -25,8 +26,14 @@ const start = async() =>{
     try {
       await sequelize.authenticate()
       await sequelize.sync()
-
       app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+      
+      // testLoading.loadTariffs();
+      // testLoading.loadResources();
+      // testLoading.loadApartments()
+      // testLoading.loadUsers()
+      // testLoading.loadCounters()
+      // testLoading.loadCounterValues()   
 
     } catch(e) {
         console.log(e) // обработка ошибок
