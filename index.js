@@ -24,16 +24,21 @@ app.use(ErrorHandlerMiddleware)  // обработка ошибок всегда
 
 const start = async() =>{
     try {
+      sequelize.query()
       await sequelize.authenticate()
+        .then()
+        .catch(()=>{
+          console.log('Not connectet')
+        })
       await sequelize.sync()
       app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
       
-      // testLoading.loadTariffs();
-      // testLoading.loadResources();
-      // testLoading.loadApartments()
-      // testLoading.loadUsers()
-      // testLoading.loadCounters()
-      // testLoading.loadCounterValues()   
+    // testLoading.loadTariffs();
+    // testLoading.loadResources();
+    // testLoading.loadApartments()
+    // testLoading.loadUsers()
+    // testLoading.loadCounters()
+    //  testLoading.loadCounterValues()   
 
     } catch(e) {
         console.log(e) // обработка ошибок
