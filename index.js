@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const sequelize = require('./db')
 const models = require('./models/models')
+const checkDb = require('./checkdb')
 const testLoading = require('./models/createTestDB')
 
 const cors = require('cors')
@@ -22,23 +23,20 @@ app.use(`/api/${API_VERSION}`,router)  // не уверен в необходи�
 
 app.use(ErrorHandlerMiddleware)  // обработка ошибок всегда в конце
 
+ checkDb(process.env.DB_NAME)
+
 const start = async() =>{
     try {
-      sequelize.query()
       await sequelize.authenticate()
-        .then()
-        .catch(()=>{
-          console.log('Not connectet')
-        })
       await sequelize.sync()
       app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
       
-    // testLoading.loadTariffs();
-    // testLoading.loadResources();
-    // testLoading.loadApartments()
-    // testLoading.loadUsers()
-    // testLoading.loadCounters()
-    //  testLoading.loadCounterValues()   
+      // testLoading.loadTariffs();
+      // testLoading.loadResources();
+      // testLoading.loadApartments()
+      // testLoading.loadUsers()
+      // testLoading.loadCounters()
+      // testLoading.loadCounterValues()   
 
     } catch(e) {
         console.log(e) // обработка ошибок

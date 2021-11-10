@@ -1,0 +1,3 @@
+
+CREATE DATABASE Home3;
+/* CREATE USER */
