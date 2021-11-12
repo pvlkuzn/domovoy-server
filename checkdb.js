@@ -1,22 +1,30 @@
 
 const {Client, Pool} = require('pg')
 
-module.exports = async function checkDb(dbName){
+module.exports = function checkDb(dbName){
   //const connectToServer  = `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@h${process.env.DB_HOST}:${process.env.DB_PORT}/postgres`
   //const connectToDB = `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@h${process.env.DB_HOST}:${process.env.DB_PORT}/${dbName}`
   
   /*const client = new Client({
     connectToServer,
   }) */ 
-// --- Check connection to server
-  const connectToServer =  new Client({
+  const toServer = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,     
     password: process.env.DB_PASSWORD, 
-  })
+  }
+  const toDb = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,     
+    password: process.env.DB_PASSWORD, 
+    database: dbName
+  }
 
-  
+// --- Check connection to server
+  const connectToServer =  new Client(toServer)
+
   connectToServer.connect(err =>{  // проверяем доступность сервера
     if (err){
       const errStatus =  (err.stack.indexOf('does not exist'))? 'does not exist!' : ' other' // сервер не доступен
@@ -24,25 +32,14 @@ module.exports = async function checkDb(dbName){
     } else {
       console.log(`Connected to server!`)  // сервер доступен
       
-      const connectToDb = new Client({   // подключения к базе dbName (передаётся параметром)
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USER,     
-        password: process.env.DB_PASSWORD, 
-        database: dbName
-      })
+      const connectToDb = new Client(toDb)   // подключения к базе dbName (передаётся параметром)
 
       connectToDb.connect(err =>{         // проверям возможность подключения к базе
         if (err){
-          const errDB = (err.stack.indexOf('does not exist'))? 'does not exist!' : ' other' // Если базы нет, то пробуем создать
-          console.log(`Connection to DB error : ${errDB}`)
+          const errDb = (err.stack.indexOf('does not exist'))? 'does not exist!' : ' other' // Если базы нет, то пробуем создать
+          console.log(`Connection to DB error : ${errDb}`)
            
-          const createDB = new Client({    // создаём новое подключаемся к серверу
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            user: process.env.DB_USER,     
-            password: process.env.DB_PASSWORD, 
-          })
+          const createDB = new Client(toServer)    // создаём новое подключаемся к серверу
            createDB.connect()  // подключаемся к серверу
             .then(()=>{ 
               createDB.query(`CREATE DATABASE ${dbName}`)       // создаём базу
@@ -50,12 +47,14 @@ module.exports = async function checkDb(dbName){
                 .catch(err => console.log(`DB error`, err.stack))
                 .then(()=> createDB.end())   
               })
-          
+              connectToDb.end()
+        
           } else {
             console.log(`Connected to DB`)
             
           }
       })
+      connectToServer.end()
     }
   })
   
