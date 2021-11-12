@@ -23,6 +23,7 @@ module.exports = async function checkDb(dbName){
         const errStatus =  (err.stack.indexOf('does not exist'))? 'does not exist!' : ' other' // сервер не доступен
         console.log(`Connection to server error : ${errStatus}`)
         serverOk = false;  // server fail
+        return false
       })
       .then(()=>{
         serverOk = true;  // server is ok
@@ -33,26 +34,30 @@ module.exports = async function checkDb(dbName){
     .then(()=>{
       dbNotExist = false //db is existing
       console.log(`Connected to DB  ${toDb.database} : Ok`)
-      
+      return true
     })
       .catch( err =>{
         const errDb = (err.stack.indexOf('does not exist'))? 'does not exist!' : ' other' // Если базы нет, то пробуем создать
         dbNotExist = true
-        console.log(`Connection to DB error : ${errDb}`)
+       //console.log(`Connection to DB error : ${errDb}`)
       })
     
     if (serverOk && dbNotExist){
         const connectForCreate = new Client(toServer)
         await connectForCreate.connect()
-        .then( ()=> {
-         })
+        //.then( ()=> {         })
         .catch(err =>{
           console.log(`Connect for create error : ${err.stack}`)
+          return false
         })
         await connectForCreate.query(`CREATE DATABASE ${dbName}`)
           .then( result =>{ 
-            console.log(`DB ${dbName} created`);
-
+            console.log(`DB ${dbName} created`)
+            return true
+          })
+          .catch(err =>{
+            console.log(`Create error : ${err.stack}`)
+            return false
           }) 
     }
   }
