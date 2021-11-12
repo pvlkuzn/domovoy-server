@@ -28,6 +28,10 @@ module.exports = async function checkDb(dbName){
       .then(()=>{
         serverOk = true;  // server is ok
       })
+      .finally(()=>{
+        connectToServer.end()
+      }) 
+  
       
     const connectToDb = new Client(toDb)   // подключения к базе dbName (передаётся параметром)
     await connectToDb.connect()
@@ -41,7 +45,10 @@ module.exports = async function checkDb(dbName){
         dbNotExist = true
        //console.log(`Connection to DB error : ${errDb}`)
       })
-    
+    .finally(()=>{
+      connectToDb.end()
+    }) 
+
     if (serverOk && dbNotExist){
         const connectForCreate = new Client(toServer)
         await connectForCreate.connect()
@@ -58,6 +65,11 @@ module.exports = async function checkDb(dbName){
           .catch(err =>{
             console.log(`Create error : ${err.stack}`)
             return false
+          })
+          .finally(()=>{
+            connectForCreate.end()
+       //     connectToDb.end()
+            //connectToServer.end()
           }) 
     }
   }
