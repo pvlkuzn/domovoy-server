@@ -24,7 +24,28 @@ app.use(`/api/${API_VERSION}`,router)  // не уверен в необходи�
 app.use(ErrorHandlerMiddleware)  // обработка ошибок всегда в конце
 
 
+const start = async() =>{
+  try {
+    await checkDb(process.env.DB_NAME)
 
+    await sequelize.authenticate()
+    await sequelize.sync()
+    app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+    
+    // testLoading.loadTariffs();
+    // testLoading.loadResources();
+    // testLoading.loadApartments()
+    // testLoading.loadUsers()
+    // testLoading.loadCounters()
+    // testLoading.loadCounterValues()   
+
+  } catch(e) {
+      console.log(e) // обработка ошибок
+  }
+}
+
+start()
+/*
 const letCreateBase = (nameDB)=>{
   return new Promise((resolve, reject)=>{
     checkDb(nameDB)
@@ -53,3 +74,4 @@ promise.then(() =>{
   }
  start()
 })
+*/
