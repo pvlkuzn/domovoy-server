@@ -37,7 +37,6 @@ module.exports = async function checkDb(dbName){
     await connectToDb.connect()
     .then(()=>{
       dbNotExist = false //db is existing
-      console.log(`Connected to DB  ${toDb.database} : Ok`)
       return true
     })
       .catch( err =>{

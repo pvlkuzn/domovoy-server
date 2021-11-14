@@ -1,4 +1,6 @@
 const { User, Resource, Tariff,Counter, CounterValue, Apartment } = require('./models')
+const bcrypt = require('bcrypt')
+
 
 class loadMockData {
     async loadTariffs() {  // Total : 6
@@ -159,7 +161,7 @@ class loadMockData {
     await User.bulkCreate(
         [{
            email: 'user1@mail.mail',
-           password: '11',
+           password:  await bcrypt.hash('11', 5),
            role: 'USER',
            name: 'Ivan One',
            phone: '111-1111-11111',
@@ -167,7 +169,7 @@ class loadMockData {
            apartmentId : 1
         },{
             email: 'user2@mail.mail',
-            password: '22',
+            password:  await bcrypt.hash('44', 5),
             role: 'ADMIN',
             name: 'Oleg Two',
             phone: '111-1111-22222',
@@ -175,7 +177,7 @@ class loadMockData {
             apartmentId : 2
          },{
             email: 'user3@mail.mail',
-            password: '33',
+            password:  await bcrypt.hash('44', 5),
             role: 'USER',
             name: 'Mina Three',
             phone: '111-1111-33333',
@@ -183,7 +185,7 @@ class loadMockData {
             apartmentId : 3
          },{
             email: 'user4@mail.mail',
-            password: '44',
+            password:  await bcrypt.hash('44', 5),
             role: 'MANAGER',
             name: 'Peter Four',
             phone: '111-1111-44444',
